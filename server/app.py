@@ -101,7 +101,7 @@ def create_fake_data(num_customers=10, num_properties_per_customer=2):
             )
             db.session.add(fake_event_space)
             db.session.commit()
-# Uncomment the following line to generate fake data
-# create_fake_data()
+
+create_fake_data()
 if __name__ == '__main__':
     app.run(debug=True)
