@@ -1,67 +1,28 @@
-#!/usr/bin/env python3
-
-
-from random import randint, choice as rc
-
-
-
-
 from faker import Faker
+from app import db
+from models import User, Owner, Property
 
-from app import app
-from models import db, Recipe, User
-
-fake = Faker()
-
-with app.app_context():
-
-    print("Deleting all records...")
-    Recipe.query.delete()
-    User.query.delete()
-
+def seed_data(num_users=10, num_properties_per_owner=2):
     fake = Faker()
-
-    print("Creating users...")
-
-    # make sure users have unique usernames
-    users = []
-    usernames = []
-
-    for i in range(20):
-        
-        username = fake.first_name()
-        while username in usernames:
-            username = fake.first_name()
-        usernames.append(username)
-
-        user = User(
-            username=username,
-            bio=fake.paragraph(nb_sentences=3),
-            image_url=fake.url(),
+    for _ in range(num_users):
+        # Create a fake owner
+        fake_owner = Owner(
+            username=fake.user_name(),
+            email=fake.email(),
+            password_hash=fake.password()
         )
-
-        user.password_hash = user.username + 'password'
-
-        users.append(user)
-
-    db.session.add_all(users)
-
-    print("Creating recipes...")
-    recipes = []
-    for i in range(100):
-        instructions = fake.paragraph(nb_sentences=8)
+        db.session.add(fake_owner)
+        db.session.commit()
         
-        recipe = Recipe(
-            title=fake.sentence(),
-            instructions=instructions,
-            minutes_to_complete=randint(15,90),
-        )
-
-        recipe.user = rc(users)
-
-        recipes.append(recipe)
-
-    db.session.add_all(recipes)
-    
-    db.session.commit()
-    print("Complete.")
+        for _ in range(num_properties_per_owner):
+            # Create a fake property
+            fake_property = Property(
+                name=fake.word(),
+                location=fake.address(),
+                price=fake.random_int(min=500, max=5000),
+                description=fake.text(max_nb_chars=200)
+            )
+            fake_property.owners.append(fake_owner)
+            db.session.add(fake_property)
+            db.session.commit()
+    print(f"Successfully seeded {num_users} users and {num_properties_per_owner} properties per user.")
