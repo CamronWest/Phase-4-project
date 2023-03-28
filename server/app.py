@@ -3,7 +3,7 @@ from extensions import db, login_manager
 from faker import Faker
 from models import User, Owner, Property  # Import User, Owner, and Property classes
 from flask_migrate import Migrate
-from flask_login import login_required
+from flask_login.utils import login_required
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
