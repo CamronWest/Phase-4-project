@@ -1,39 +1,15 @@
-#!/usr/bin/env python3
-
-from random import randint, choice as rc
-
 from faker import Faker
+from app import db
+from models import User, Owner, Property
 
-from app import app
-from models import db, users, owners
-
-fake = Faker()
-
-with app.app_context():
-
-    print("Deleting all users...")
-    users.query.delete()
-    owners.query.delete()
-
+def seed_data(num_users=10, num_properties_per_owner=2):
     fake = Faker()
-
-    print("Creating users...")
-
-    # make sure users have unique usernames
-    users = []
-    usernames = []
-
-    for i in range(20):
-        
-        username = fake.first_name()
-        while username in usernames:
-            username = fake.first_name()
-        usernames.append(username)
-
-        user = User(
-            username=username,
-            bio=fake.paragraph(nb_sentences=3),
-            image_url=fake.url(),
+    for _ in range(num_users):
+        # Create a fake owner
+        fake_owner = Owner(
+            username=fake.user_name(),
+            email=fake.email(),
+            password_hash=fake.password()
         )
 
         user.password_hash = user.username + 'password'
@@ -45,11 +21,11 @@ with app.app_context():
     print("Creating properties....")
    
 
-        recipe.user = rc(users)
+    #     owners.user = rc(users)
 
-        recipes.append(recipe)
+    #     owners.append(recipe)
 
-    db.session.add_all(recipes)
+    # db.session.add_all(recipes)
     
     db.session.commit()
     print("Complete.")

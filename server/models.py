@@ -1,54 +1,36 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from extensions import db
 
-from config import db, bcrypt
-
-
+# Define the association table
+property_user_association_table = db.Table('property_user_association',
+    db.Column('property_id', db.Integer, db.ForeignKey('property.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
 
 class User(db.Model, SerializerMixin):
-    __tablename__ = 'users'
-
-    serialize_rules = ('-recipes.user', '-_password_hash',)
-
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    _password_hash = db.Column(db.String)
-    image_url = db.Column(db.String)
-    bio = db.Column(db.String)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
-    recipes = db.relationship('Recipe', backref='user')
+    # Define the many-to-many relationship with Property
+    owned_properties = db.relationship('Property', secondary=property_user_association_table, back_populates='owners')
 
-    @hybrid_property
-    def password_hash(self):
-        raise AttributeError('Password hashes may not be viewed.')
+class Owner(User):
+    __tablename__ = 'owner'
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    owned_properties = db.relationship("Property", backref="owner", lazy=True)
 
-    @password_hash.setter
-    def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(
-            password.encode('utf-8'))
-        self._password_hash = password_hash.decode('utf-8')
-
-    def authenticate(self, password):
-        return bcrypt.check_password_hash(
-            self._password_hash, password.encode('utf-8'))
-
-    def __repr__(self):
-        return f'<User {self.username}>'
-
-class Recipe(db.Model, SerializerMixin):
-    __tablename__ = 'recipes'
-    __table_args__ = (
-        db.CheckConstraint('length(instructions) >= 50'),
-    )
-
+class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
-    instructions = db.Column(db.String, nullable=False)
-    minutes_to_complete = db.Column(db.Integer)
+    name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(255), nullable=True)
 
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    # Define the many-to-many relationship with User
+    owners = db.relationship('User', secondary=property_user_association_table, back_populates='owned_properties')
 
-    def __repr__(self):
-        return f'<Recipe {self.id}: {self.title}>'
-    
-    # db.create_all()
+    owner_id = db.Column(db.Integer, db.ForeignKey("owner.id"), nullable=False)
