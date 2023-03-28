@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
 
-
 from random import randint, choice as rc
-
-
-
 
 from faker import Faker
 
 from app import app
-from models import db, Recipe, User
+from models import db, users, owners
 
 fake = Faker()
 
 with app.app_context():
 
-    print("Deleting all records...")
-    Recipe.query.delete()
-    User.query.delete()
+    print("Deleting all users...")
+    users.query.delete()
+    owners.query.delete()
 
     fake = Faker()
 
@@ -46,16 +42,8 @@ with app.app_context():
 
     db.session.add_all(users)
 
-    print("Creating recipes...")
-    recipes = []
-    for i in range(100):
-        instructions = fake.paragraph(nb_sentences=8)
-        
-        recipe = Recipe(
-            title=fake.sentence(),
-            instructions=instructions,
-            minutes_to_complete=randint(15,90),
-        )
+    print("Creating properties....")
+   
 
         recipe.user = rc(users)
 

@@ -148,7 +148,7 @@ api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(RecipeIndex, '/recipes', endpoint='recipes')
 
 
-=======
+
 from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
