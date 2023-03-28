@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
-import NavBar from "../components/Home-Access/Nav/Nav.jsx";
+import Nav from "../components/Home-Access/Nav/Nav.jsx";
 import Login from "../components/Home-Access/LoginOut/Login.jsx";
-
+import Home from "../components/Home-Access/Home/Home.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,22 +16,19 @@ function App() {
     });
   }, []);
 
-  if (!user) return <Login onLogin={setUser} />;
+  // if (!user) return <Login onLogin={setUser} />;
+  //put the above back in to handle auto render login or user home. I may need to live on home component
 
   return (
-    <>
-      <NavBar user={user} setUser={setUser} />
-      <main>
+
         <Switch>
-          <Route path="/new">
-            <NewRecipe user={user} />
-          </Route>
+
           <Route path="/">
-            <RecipeList />
+            <Home />
           </Route>
+
         </Switch>
-      </main>
-    </>
+
   );
 }
 
