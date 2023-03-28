@@ -1,6 +1,6 @@
 from sqlalchemy_serializer import SerializerMixin
-from config import db
 from sqlalchemy import Table, Column, Integer, ForeignKey
+from extensions import db
 
 # Define the association table
 property_user_association_table = db.Table('property_user_association',

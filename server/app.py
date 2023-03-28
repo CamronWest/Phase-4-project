@@ -1,21 +1,24 @@
 from flask import Flask, render_template, url_for, redirect, request, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from extensions import db, login_manager
 from faker import Faker
 from models import User, Owner, Property  # Import User, Owner, and Property classes
 from flask_migrate import Migrate
-
-migrate = Migrate(app, db)
+from flask_login import login_required
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
-db = SQLAlchemy(app)
+db.init_app(app)
+login_manager.init_app(app)
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+# ...
 
-with app.app_context():
+
+# Your routes here
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 
 # Define your routes here
     @app.route('/')
