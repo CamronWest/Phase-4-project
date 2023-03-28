@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
-import Nav from "../components/Home-Access/Nav/Nav.jsx";
+import Nav from "./Home-Access/Home/Nav.jsx";
 import Login from "../components/Home-Access/LoginOut/Login.jsx";
 import Home from "../components/Home-Access/Home/Home.jsx";
 
