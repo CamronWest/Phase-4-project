@@ -1,7 +1,10 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy import Table, Column, Integer, ForeignKey
-from extensions import db
+from flask_login import LoginManager
+from config import db
+
+login_manager = LoginManager()
 
 # Define the association table
 property_user_association_table = db.Table('property_user_association',

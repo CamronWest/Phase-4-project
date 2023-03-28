@@ -1,6 +1,7 @@
 from faker import Faker
 from app import db
-from models import User, Owner, Property
+from models import User, Owner, Property, db
+from app import app
 
 def seed_data(num_users=10, num_properties_per_owner=2):
     fake = Faker()
