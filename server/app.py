@@ -11,7 +11,7 @@ db.init_app(app)  # register the app with the SQLAlchemy instance
 
 migrate = Migrate(app, db)  # initialize the Flask-Migrate extension
 
-login_manager.init_app(app)
+#login_manager.init_app(app)
 
 
 # Owners routes
@@ -67,9 +67,9 @@ def logout():
     session.pop('username', None)
     return redirect('/')
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+#@login_manager.user_loader
+#def load_user(user_id):
+    #return User.query.get(int(user_id))
 
 def create_fake_data(num_customers=10, num_properties_per_customer=2):
     fake = Faker()
