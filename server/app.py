@@ -1,9 +1,8 @@
-from flask import Flask, jsonify, request
 from models import User, Owner, Property, db
 from flask_migrate import Migrate
 from flask_login.utils import login_required
 from flask_login import LoginManager
-
+from flask import Flask, render_template, url_for, redirect, request, flash, Flask,session, jsonify
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
@@ -11,6 +10,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
 db.init_app(app)  # register the app with the SQLAlchemy instance
 
 migrate = Migrate(app, db)  # initialize the Flask-Migrate extension
+
+login_manager.init_app(app)
+
 
 # Owners routes
 @app.route('/owners', methods=['GET'])
@@ -29,9 +31,59 @@ def owner_detail(id):
         owner.name = request.json.get('name', owner.name)
         owner.email = request.json.get('email', owner.email)
         owner.phone_number = request.json.get('phone_number', owner.phone_number)
+
+
+@app.route('/')
+def home():
+    if 'username' in session:
+        return 'Logged in as ' + session['username'] + '<br>' + \
+            '<b><a href="/logout">Logout</a></b>'
+    return "You are not logged in <br><a href='/login'></b>" + \
+        "click here to log in</b></a>"
+    
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    user = User.query.all()
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        
+        # Redirect to a thank you page if the signup is successful  
+        return render_template('thank_you.html', name=name)
+    else:
+        # Display the signup form if the method request is just GET 
+        return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect('/')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/')
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+def create_fake_data(num_customers=10, num_properties_per_customer=2):
+    fake = Faker()
+    for _ in range(num_customers):
+        # Create a fake owner
+        fake_owner = Owner(
+            username=fake.user_name(),
+            email=fake.email(),
+            password_hash=fake.password(length=12)
+        )
+        db.session.add(fake_owner)
         db.session.commit()
         return jsonify(owner.serialize()), 200
-    elif request.method == 'DELETE':
+    if request.method == 'DELETE':
         db.session.delete(owner)
         db.session.commit()
         return jsonify({}), 204
