@@ -1,227 +1,119 @@
-
-#!/usr/bin/env python3
-
-from flask import request, session
-from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
-
-from config import app, db, api
-from models import User, Recipe, db
-from config import db
-
-# db.create_all()
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-
-class Signup(Resource):
-    
-    def post(self):
-
-        request_json = request.get_json()
-
-        username = request_json.get('username')
-        password = request_json.get('password')
-        image_url = request_json.get('image_url')
-        bio = request_json.get('bio')
-
-        user = User(
-            username=username,
-            image_url=image_url,
-            bio=bio
-        )
-
-        # the setter will encrypt this
-        user.password_hash = password
-
-        print('first')
-
-        try:
-
-            print('here!')
-
-            db.session.add(user)
-            db.session.commit()
-
-            session['user_id'] = user.id
-
-            print(user.to_dict())
-
-            return user.to_dict(), 201
-
-        except IntegrityError:
-
-            print('no, here!')
-            
-            return {'error': '422 Unprocessable Entity'}, 422
-
-class CheckSession(Resource):
-    
-    def get(self):
-
-        if session.get('user_id'):
-
-            user = User.query.filter(User.id == session['user_id']).first()
-
-            return user.to_dict(), 200
-
-        return {'error': '401 Unauthorized'}, 401
-
-class Login(Resource):
-    
-    def post(self):
-
-        request_json = request.get_json()
-
-        username = request_json.get('username')
-        password = request_json.get('password')
-
-        user = User.query.filter(User.username == username).first()
-
-        if user:
-            if user.authenticate(password):
-
-                session['user_id'] = user.id
-                return user.to_dict(), 200
-
-        return {'error': '401 Unauthorized'}, 401
-
-class Logout(Resource):
-    
-    def delete(self):
-        
-        if session.get('user_id'):
-            
-            session['user_id'] = None
-            
-            return {}, 204
-        
-        return {'error': '401 Unauthorized'}, 401
-
-class RecipeIndex(Resource):
-
-    def get(self):
-
-        if session.get('user_id'):
-
-            user = User.query.filter(User.id == session['user_id']).first()
-
-            return [recipe.to_dict() for recipe in user.recipes], 200
-        
-        return {'error': '401 Unauthorized'}, 401
-        
-    def post(self):
-
-        if session.get('user_id'):
-
-            request_json = request.get_json()
-
-            title = request_json['title']
-            instructions = request_json['instructions']
-            minutes_to_complete = request_json['minutes_to_complete']
-
-            try:
-
-                recipe = Recipe(
-                    title=title,
-                    instructions=instructions,
-                    minutes_to_complete=minutes_to_complete,
-                    user_id=session['user_id'],
-                )
-
-                db.session.add(recipe)
-                db.session.commit()
-
-                return recipe.to_dict(), 201
-
-            except IntegrityError:
-
-                return {'error': '422 Unprocessable Entity'}, 422
-
-        return {'error': '401 Unauthorized'}, 401
-
-api.add_resource(Signup, '/signup', endpoint='signup')
-api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-api.add_resource(Login, '/login', endpoint='login')
-api.add_resource(Logout, '/logout', endpoint='logout')
-api.add_resource(RecipeIndex, '/recipes', endpoint='recipes')
-
-
-=======
-from flask import Flask, render_template, url_for, redirect, request, flash
-from extensions import db, login_manager
-from faker import Faker
-from models import User, Owner, Property  # Import User, Owner, and Property classes
+from flask import Flask, jsonify, request
+from models import User, Owner, Property, db
 from flask_migrate import Migrate
 from flask_login.utils import login_required
+from flask_login import LoginManager
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
-db.init_app(app)
-login_manager.init_app(app)
 
-# ...
+db.init_app(app)  # register the app with the SQLAlchemy instance
 
+migrate = Migrate(app, db)  # initialize the Flask-Migrate extension
 
-# Your routes here
+# Owners routes
+@app.route('/owners', methods=['GET'])
+def get_owners():
+    owners = Owner.query.all()
+    owners_dict = [owner.serialize() for owner in owners]
+    return jsonify(owners_dict), 200
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-# Define your routes here
-    @app.route('/')
-    def home():
-    # Your home page logic
-        return 'Welcome to the homepage!'
-
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    # Your signup logic
-    pass
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # Your login logic
-    pass
-
-@app.route('/logout')
-@login_required
-def logout():
-    # Your logout logic
-    pass
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-def create_fake_data(num_customers=10, num_properties_per_customer=2):
-    fake = Faker()
-    for _ in range(num_customers):
-        # Create a fake owner
-        fake_owner = Owner(
-            username=fake.user_name(),
-            email=fake.email(),
-            password_hash=fake.password(length=12)
-        )
-        db.session.add(fake_owner)
+@app.route('/owners/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def owner_detail(id):
+    owner = Owner.query.get_or_404(id)
+    if request.method == 'GET':
+        return jsonify(owner.serialize()), 200
+    elif request.method == 'PUT':
+        # Update the owner's properties
+        owner.name = request.json.get('name', owner.name)
+        owner.email = request.json.get('email', owner.email)
+        owner.phone_number = request.json.get('phone_number', owner.phone_number)
         db.session.commit()
-        
-        for _ in range(num_properties_per_customer):
-            # Create a fake property for the owner
-            fake_property = Property(
-                name=fake.company(),
-                location=fake.address(),
-                price=fake.random_int(min=500, max=5000),
-                description=fake.text(max_nb_chars=200),
-                owner_id=fake_owner.id
-            )
-            db.session.add(fake_property)
-            db.session.commit()
+        return jsonify(owner.serialize()), 200
+    elif request.method == 'DELETE':
+        db.session.delete(owner)
+        db.session.commit()
+        return jsonify({}), 204
 
-#create_fake_data()
+@app.route('/owners', methods=['POST'])
+def create_owner():
+    name = request.json.get('name')
+    email = request.json.get('email')
+    phone_number = request.json.get('phone_number')
+    user_id = request.json.get('user_id')
+    owner = Owner(name=name, email=email, phone_number=phone_number, user_id=user_id)
+    db.session.add(owner)
+    db.session.commit()
+    return jsonify(owner.serialize()), 201
+
+# Users routes
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    users_dict = [user.serialize() for user in users]
+    return jsonify(users_dict), 200
+
+@app.route('/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def user_detail(id):
+    user = User.query.get_or_404(id)
+    if request.method == 'GET':
+        return jsonify(user.serialize()), 200
+    elif request.method == 'PUT':
+        # Update the user's properties
+        user.name = request.json.get('name', user.name)
+        user.email = request.json.get('email', user.email)
+        user.password = request.json.get('password', user.password)
+        db.session.commit()
+        return jsonify(user.serialize()), 200
+    elif request.method == 'DELETE':
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({}), 204
+
+@app.route('/users', methods=['POST'])
+def create_user():
+    name = request.json.get('name')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    user = User(name=name, email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.serialize()), 201
+
+# Properties routes
+@app.route('/properties', methods=['GET', 'POST'])
+def properties():
+    if request.method == 'GET':
+        properties = Property.query.all()
+        properties_dict = [property.serialize() for property in properties]
+        return jsonify(properties_dict), 200
+    elif request.method == 'POST':
+        name = request.json.get('name')
+        description = request.json.get('description')
+        price = request.json.get('price')
+        owner_id = request.json.get('owner_id')
+        property = Property(name=name, description=description, price=price, owner_id=owner_id)
+        db.session.add(property)
+        db.session.commit()
+        return jsonify(property.serialize()), 201
+
+@app.route('/properties/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def property_detail(id):
+    property = Property.query.get_or_404(id)
+    if request.method == 'GET':
+        return jsonify(property.serialize()), 200
+    elif request.method == 'PUT':
+        # Update the property's properties
+        property.name = request.json.get('name', property.name)
+        property.description = request.json.get('description', property.description)
+        property.price = request.json.get('price', property.price)
+        db.session.commit()
+        return jsonify(property.serialize()), 200
+    elif request.method == 'DELETE':
+        db.session.delete(property)
+        db.session.commit()
+        return jsonify({}), 204
+
 if __name__ == '__main__':
     app.run(debug=True)
