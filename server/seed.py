@@ -25,10 +25,11 @@ with app.app_context():
     # Create 20 fake properties
     for i in range(20):
         name = fake.word()
-        description = fake.text()
-        price = fake.random_int(min=100, max=1000)
+        location = fake.address()
+        description = fake.text(max_nb_chars=60)
+        price = fake.random_int(min=100, max=350)
         owner_id = fake.random_int(min=1, max=5)
-        property = Property(name=name, description=description, price=price, owner_id=owner_id)
+        property = Property(name=name, location=location, description=description, price=price, owner_id=owner_id)
         db.session.add(property)
 
     # Commit the changes to the database

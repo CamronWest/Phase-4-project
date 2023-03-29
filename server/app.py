@@ -141,11 +141,12 @@ def properties():
         properties_dict = [property.serialize() for property in properties]
         return jsonify(properties_dict), 200
     elif request.method == 'POST':
+        location = request.json.get('location')
         name = request.json.get('name')
         description = request.json.get('description')
         price = request.json.get('price')
         owner_id = request.json.get('owner_id')
-        property = Property(name=name, description=description, price=price, owner_id=owner_id)
+        property = Property(name=name, location=location, description=description, price=price, owner_id=owner_id)
         db.session.add(property)
         db.session.commit()
         return jsonify(property.serialize()), 201
@@ -157,6 +158,7 @@ def property_detail(id):
         return jsonify(property.serialize()), 200
     elif request.method == 'PUT':
         # Update the property's properties
+        property.location = request.get('location', property.location)
         property.name = request.json.get('name', property.name)
         property.description = request.json.get('description', property.description)
         property.price = request.json.get('price', property.price)
