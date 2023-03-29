@@ -1,9 +1,11 @@
 from flask import Flask, render_template, url_for, redirect, request, flash, Flask,session
 from faker import Faker
-from models import User, Owner, Property, db, login_manager
+from flask_restful import Resource
 from flask_migrate import Migrate
 from flask_login.utils import login_required
 from config import app, db, api
+from models import User, Owner, Property, db, login_manager
+
 
 db.init_app(app)
 login_manager.init_app(app)
