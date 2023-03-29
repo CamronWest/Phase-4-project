@@ -60,6 +60,7 @@ class Property(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String(), nullable=False)
+    state = db.Column(db.String(), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -72,6 +73,8 @@ class Property(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'name': self.name,
+            'location': self.location,
+            'state': self.state,
             'description': self.description,
             'price': self.price,
             'owner_id': self.owner_id
