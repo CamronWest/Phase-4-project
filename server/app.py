@@ -1,47 +1,52 @@
-from flask import Flask, render_template, url_for, redirect, request, flash
-from extensions import db, login_manager
+from flask import Flask, render_template, url_for, redirect, request, flash, Flask,session
 from faker import Faker
-from models import User, Owner, Property  # Import User, Owner, and Property classes
+from models import User, Owner, Property, db, login_manager
 from flask_migrate import Migrate
 from flask_login.utils import login_required
+from config import app, db, api
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
 db.init_app(app)
 login_manager.init_app(app)
 
-# ...
-
-
-# Your routes here
 
 if __name__ == '__main__':
     app.run(debug=True)
 
 
-# Define your routes here
 
-    @app.route('/')
-    def home():
-    # Your home page logic
-        return 'Welcome to the homepage!'
+@app.route('/')
+def home():
+    if 'username' in session:
+        return 'Logged in as ' + session['username'] + '<br>' + \
+            '<b><a href="/logout">Logout</a></b>'
+    return "You are not logged in <br><a href='/login'></b>" + \
+        "click here to log in</b></a>"
+    
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    # Your signup logic
-    pass
+    user = User.query.all()
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        
+        # Redirect to a thank you page if the signup is successful  
+        return render_template('thank_you.html', name=name)
+    else:
+        # Display the signup form if the method request is just GET 
+        return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Your login logic
-    pass
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect('/')
+    return render_template('login.html')
 
 @app.route('/logout')
-@login_required
 def logout():
-    # Your logout logic
-    pass
+    session.pop('username', None)
+    return redirect('/')
 
 @login_manager.user_loader
 def load_user(user_id):
