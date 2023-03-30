@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Nav.css";
 import PropertyList from "../../Properties/PropertyList";
 
-function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOption, setShowStateOption, selectedState, setSelectedState, guests, setGuests, hostView, setHostView, toggleView, setUser }) {
+function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOption, setShowStateOption, selectedState, setSelectedState, guests, setGuests, hostView, switchHostView, setHostView, setUser, switchGuestView }) {
 
 
     const handleStateOptionClick = (e) => {
@@ -103,8 +103,9 @@ function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOptio
                 </ul>
             </div>
             <div className="nav-right">
-                <button onClick={toggleView} type="button" href="#">Toggle Guest/Host View</button>
                 <img src="#" alt="user avatar" />
+                <button onClick={switchGuestView} type="button" href="#">Guest View</button>
+                <button onClick={switchHostView}  type="button" href="#">Host View</button>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         </nav>
