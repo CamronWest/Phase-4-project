@@ -1,18 +1,17 @@
-from models import User, Owner, Property, db
-from flask_migrate import Migrate
-from flask_login.utils import login_required
+from flask import Flask, render_template, url_for, redirect, request, flash, session, jsonify
 from flask_login import LoginManager
-from flask import Flask, render_template, url_for, redirect, request, flash, Flask,session, jsonify
+from flask_migrate import Migrate
+from models import User, Owner, Property, db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///event_space.db'
+app.config['SECRET_KEY'] = 'secret_key'
 
 db.init_app(app)  # register the app with the SQLAlchemy instance
-
 migrate = Migrate(app, db)  # initialize the Flask-Migrate extension
 
-#login_manager.init_app(app)
-
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 # Owners routes
 @app.route('/owners', methods=['GET'])
@@ -31,27 +30,29 @@ def owner_detail(id):
         owner.name = request.json.get('name', owner.name)
         owner.email = request.json.get('email', owner.email)
         owner.phone_number = request.json.get('phone_number', owner.phone_number)
-
+        db.session.commit()
+        return jsonify(owner.serialize()), 200
+    elif request.method == 'DELETE':
+        db.session.delete(owner)
+        db.session.commit()
+        return jsonify({}), 204
 
 @app.route('/')
 def home():
-    if 'username' in session:
-        return 'Logged in as ' + session['username'] + '<br>' + \
-            '<b><a href="/logout">Logout</a></b>'
-    return "You are not logged in <br><a href='/login'></b>" + \
-        "click here to log in</b></a>"
-    
+    return "Welcome to ROAM"
+    # if 'username' in session:
+    #     return 'Logged in as ' + session['username'] + '<br>' + \
+    #         '<b><a href="/logout">Logout</a></b>'
+    # return "You are not logged in <br><a href='/login'></b>" + \
+    #     "click here to log in</b></a>"
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    user = User.query.all()
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-
         return render_template('thank_you.html', username=username, email=email)
     else:
-
         return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -67,9 +68,9 @@ def logout():
     session.pop('username', None)
     return redirect('/')
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 def create_fake_data(num_customers=10, num_properties_per_customer=2):
     fake = Faker()
@@ -82,11 +83,7 @@ def create_fake_data(num_customers=10, num_properties_per_customer=2):
         )
         db.session.add(fake_owner)
         db.session.commit()
-        return jsonify(owner.serialize()), 200
-    if request.method == 'DELETE':
-        db.session.delete(owner)
-        db.session.commit()
-        return jsonify({}), 204
+    return jsonify(fake_owner.serialize()), 200
 
 @app.route('/owners', methods=['POST'])
 def create_owner():
@@ -98,6 +95,8 @@ def create_owner():
     db.session.add(owner)
     db.session.commit()
     return jsonify(owner.serialize()), 201
+
+
 
 # Users routes
 @app.route('/users', methods=['GET'])

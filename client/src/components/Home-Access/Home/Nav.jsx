@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Nav.css";
 import PropertyList from "../../Properties/PropertyList";
 
-function Nav({ stateList, showGuestOption,setShowGuestOption,showStateOption, setShowStateOption, selectedState, setSelectedState, guests, setGuests }) {
+function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOption, setShowStateOption, selectedState, setSelectedState, guests, setGuests, hostView, setHostView, toggleView, setUser }) {
 
 
     const handleStateOptionClick = (e) => {
@@ -11,7 +11,18 @@ function Nav({ stateList, showGuestOption,setShowGuestOption,showStateOption, se
         setShowStateOption(!showStateOption);
     };
 
-
+    function handleLogout() {
+        fetch("/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+        })
+            .then((response) => response.json())
+            .then((data) => setUser(null));
+            console.log(user)
+    }
 
 
     const handleGuestOptionClick = (e) => {
@@ -92,9 +103,9 @@ function Nav({ stateList, showGuestOption,setShowGuestOption,showStateOption, se
                 </ul>
             </div>
             <div className="nav-right">
-                <a href="#">Switch to hosting</a>
+                <button onClick={toggleView} type="button" href="#">Toggle Guest/Host View</button>
                 <img src="#" alt="user avatar" />
-                <div>User Menu</div>
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </nav>
     );

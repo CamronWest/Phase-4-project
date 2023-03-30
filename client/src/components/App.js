@@ -18,7 +18,7 @@ function App() {
         });
     }, []);
 
-    // if (!user) return <LoginForm setUser={setUser} />;
+    if (!user) return <Landing setUser={setUser} />;
     //this pushes to login page if no user is logged in, which is fine but it bypasses our beautiful landing page
 
     return (
@@ -29,11 +29,11 @@ function App() {
             </Route>
 
             <Route path="/home">
-                <Home user={user}/>
+                <Home user={user} setUser = {setUser}/>
             </Route>
 
             <Route path="/">
-                <Landing />
+                <Landing user={user} setUser={setUser} />
             </Route>
 
             
