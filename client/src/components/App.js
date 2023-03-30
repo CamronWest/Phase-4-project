@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "../components/Home-Access/Home/Home.jsx";
+import SignUpForm from "./Home-Access/LoginOut/SignUpForm.jsx";
+import LoginForm from "./Home-Access/LoginOut/LoginForm.jsx";
+import Landing from "./Home-Access/Landing/Landing.jsx";
+import Login from "./Home-Access/LoginOut/Login.jsx";
 
 function App() {
-  const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    // auto-login
-    fetch("/check_session").then((r) => {
-      if (r.ok) {
-        r.json().then((user) => setUser(user));
-      }
-    });
-  }, []);
+    useEffect(() => {
+        // auto-login
+        fetch("/check_session").then((r) => {
+            if (r.ok) {
+                r.json().then((user) => setUser(user));
+            }
+        });
+    }, []);
 
-  // if (!user) return <Login onLogin={setUser} />;
-  //put the above back in to handle auto render login or user home. I may need to live on home component
+    // if (!user) return <LoginForm setUser={setUser} />;
+    //this pushes to login page if no user is logged in, which is fine but it bypasses our beautiful landing page
 
-  return (
-
+    return (
         <Switch>
 
-          <Route path="/">
-            <Home />
-          </Route>
+            <Route path="/access">
+                <Login setUser={setUser} />
+            </Route>
 
+            <Route path="/home">
+                <Home user={user}/>
+            </Route>
+
+            <Route path="/">
+                <Landing />
+            </Route>
+
+            
         </Switch>
-
-  );
+    );
 }
 
 export default App;
