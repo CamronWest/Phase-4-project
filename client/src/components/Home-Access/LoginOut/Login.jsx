@@ -1,33 +1,28 @@
-import { useState } from "react";
-import styled from "styled-components";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignupForm";
+import React, {useState, useEffect} from 'react';
+import LoginForm from './LoginForm';
+import SignUpForm from './SignUpForm';
 
-function Login({ onLogin }) {
-    const [showLogin, setShowLogin] = useState(true);
+
+
+function Login({setUser}) {
+
+    const [needSignup, setNeedSignUp] = useState(false)
+
+    // useEffect(() => {
+    // },[needSignup])
+
 
     return (
-        <>login</>
-    );
+
+        <div>
+            {needSignup ?
+                <SignUpForm setUser={setUser} setNeedSignUp = {setNeedSignUp} />
+                :
+                <LoginForm setUser={setUser} setNeedSignUp = {setNeedSignUp} />
+            }
+        </div>
+    )
+
 }
 
-const Logo = styled.h1`
-    font-family: "Permanent Marker", cursive;
-    font-size: 3rem;
-    color: deeppink;
-    margin: 8px 0 16px;
-`;
-
-const Wrapper = styled.section`
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 16px;
-`;
-
-const Divider = styled.hr`
-    border: none;
-    border-bottom: 1px solid #ccc;
-    margin: 16px 0;
-`;
-
-export default Login;
+export default Login
