@@ -48,18 +48,18 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        
-        # Redirect to a thank you page if the signup is successful  
-        return render_template('thank_you.html', name=name)
+
+        return render_template('thank_you.html', username=username, email=email)
     else:
-        # Display the signup form if the method request is just GET 
+
         return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
-        return redirect('/')
+        print(session['username'])
+        return redirect('/home')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -67,9 +67,9 @@ def logout():
     session.pop('username', None)
     return redirect('/')
 
-#@login_manager.user_loader
-#def load_user(user_id):
-    #return User.query.get(int(user_id))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
 
 def create_fake_data(num_customers=10, num_properties_per_customer=2):
     fake = Faker()
@@ -113,7 +113,7 @@ def user_detail(id):
         return jsonify(user.serialize()), 200
     elif request.method == 'PUT':
         # Update the user's properties
-        user.name = request.json.get('name', user.name)
+        user.username = request.json.get('username', user.username)
         user.email = request.json.get('email', user.email)
         user.password = request.json.get('password', user.password)
         db.session.commit()
@@ -125,10 +125,10 @@ def user_detail(id):
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    name = request.json.get('name')
+    username = request.json.get('username')
     email = request.json.get('email')
     password = request.json.get('password')
-    user = User(name=name, email=email, password=password)
+    user = User(username=username, email=email, password=password)
     db.session.add(user)
     db.session.commit()
     return jsonify(user.serialize()), 201
