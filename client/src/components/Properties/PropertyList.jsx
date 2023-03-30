@@ -3,30 +3,9 @@ import React from "react";
 import PropertyBlock from "./PropertyBlock.jsx";
 import Nav from "../Home-Access/Home/Nav.jsx";
 
-function PropertyList({hostView, setHostView, toggleView, setUser, user}) {
-    const [showStateOption, setShowStateOption] = useState(false);
-    const [showGuestOption, setShowGuestOption] = useState(false);
-    const [guests, setGuests] = useState("almost");
-    const [allProperties, setAllProperties] = useState([]);
-    const [stateList, setStateList] = useState([]);
-    const [selectedState, setSelectedState] = useState("");
+function PropertyList({hostView, setHostView, setUser, user, switchHostView, switchGuestView, selectedState, setSelectedState, allProperties, carveState, setStateList}) {
 
-    useEffect(() => {
-        fetch("/properties")
-            .then((response) => response.json())
-            .then((data) => setAllProperties(data));
-    }, []);
-
-    let states = [];
-
-    function carveState(location) {
-        let i = parseInt(location.indexOf(","));
-        return location[parseInt(i + 2)] + location[parseInt(i + 3)];
-    }
-
-    useEffect(() => {
-        setStateList(states);
-    }, [allProperties]);
+    let states = []
 
     const propertyBlocks = allProperties.map((property) => {
         states.push(carveState(property.location));
@@ -47,9 +26,13 @@ function PropertyList({hostView, setHostView, toggleView, setUser, user}) {
         );
     });
 
+    useEffect(() => {
+        setStateList(states);
+    }, [allProperties]);
+
     return (
         <>
-            <Nav
+            {/* <Nav
                 stateList={stateList}
                 showGuestOption={showGuestOption}
                 setShowGuestOption={setShowGuestOption}
@@ -61,10 +44,11 @@ function PropertyList({hostView, setHostView, toggleView, setUser, user}) {
                 setGuests={setGuests}
                 hostView={hostView} 
                 setHostView={setHostView}
-                toggleView={toggleView}
+                switchHostView={switchHostView}
+                switchGuestView={switchGuestView}
                 setUser = {setUser}
                 user = {user}
-            />
+            /> */}
             <div className="property-blocks-container">{propertyBlocks}</div>
         </>
     );
