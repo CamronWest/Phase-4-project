@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import "./PropertyBlock.css"
 
-function PropertyBlock({name, location, state, price, description, owner}) {
+function PropertyBlock({name, location, state, price, description, owner, user}) {
+    
+    // function handleBooking (e) {
+    //      patch bookedby with current username
+    // }
+    
+    
     return (
         <div className="property-block">
             
@@ -10,12 +16,14 @@ function PropertyBlock({name, location, state, price, description, owner}) {
                 <img className = "card-Image" src = "https://a0.muscache.com/im/pictures/35f92893-40d0-4e27-acc9-0d666e0490fd.jpg?im_w=720"/>
             </div>
 
+
             <div className = "card-info">
                 <h2>{name}</h2>
                 <h3>Location: {location}</h3>
                 <h3>Price: ${price} per night</h3>
                 <p>{description}</p>
                 <p>{owner}</p>
+                <button  type="button" className = "card-button">Book Now</button>
             </div>
 
         </div>

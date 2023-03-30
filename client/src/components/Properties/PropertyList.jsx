@@ -32,23 +32,6 @@ function PropertyList({hostView, setHostView, setUser, user, switchHostView, swi
 
     return (
         <>
-            {/* <Nav
-                stateList={stateList}
-                showGuestOption={showGuestOption}
-                setShowGuestOption={setShowGuestOption}
-                showStateOption={showStateOption}
-                setShowStateOption={setShowStateOption}
-                selectedState={selectedState}
-                setSelectedState={setSelectedState}
-                guests={guests}
-                setGuests={setGuests}
-                hostView={hostView} 
-                setHostView={setHostView}
-                switchHostView={switchHostView}
-                switchGuestView={switchGuestView}
-                setUser = {setUser}
-                user = {user}
-            /> */}
             <div className="property-blocks-container">{propertyBlocks}</div>
         </>
     );
