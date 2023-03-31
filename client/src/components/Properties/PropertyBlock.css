@@ -61,5 +61,81 @@ font-weight: 400;
 }
 
 .card-info {
+<<<<<<< HEAD
 padding:.5rem
 }
+=======
+    padding:.5rem
+}
+
+.property-blocks-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    /* padding: 1rem; */
+  }
+.property-block {
+    position: relative;
+    width: calc(33.33% - 1rem);
+    margin: 0;
+    border-radius: .7rem;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+.property-block {
+    position: relative;
+    width: calc(66.66% - 2rem);
+    margin: 1rem;
+    border-radius: .7rem;
+}
+.property-blocks-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        /* padding: 1rem; */
+}
+.property-block {
+    position: relative;
+    width: calc(33.33% - 1rem);
+    margin: 0;
+    border-radius: .7rem;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+.property-block {
+    position: relative;
+    width: calc(66.66% - 2rem);
+    margin: 1rem;
+    border-radius: .7rem;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+.property-block button {
+    color: #1F2833;
+    background-color: #66FCF1;
+    border: 2px solid #66FCF1;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+.property-block button:hover {
+    background-color: #1F2833;
+    color: #66FCF1;
+}
+.property-block button {
+    color: #1F2833;
+    background-color: #66FCF1;
+    border: 2px solid #66FCF1;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+.property-block button:hover {
+    background-color: #1F2833;
+    color: #66FCF1;
+}
+>>>>>>> 93cf7e51671fcb7825edd88b6b21d56191d76737
