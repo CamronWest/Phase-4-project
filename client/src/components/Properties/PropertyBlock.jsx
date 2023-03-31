@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "./PropertyBlock.css"
 
-function PropertyBlock({name, location, state, price, description, owner, user, image}) {
+function PropertyBlock({name, location, state, price, description, owner, user, image, propid}) {
     
     // function handleBooking (e) {
     //      patch bookedby with current username
@@ -23,8 +23,8 @@ function PropertyBlock({name, location, state, price, description, owner, user, 
                 <h3>Price: ${price} per night</h3>
                 <p>{description}</p>
                 <p>{owner}</p>
-                <button  type="button" className = "card-button">Book Now</button>
             </div>
+                <button  propid = {propid} type="button" className = "card-button">Book Now</button>
 
         </div>
     )

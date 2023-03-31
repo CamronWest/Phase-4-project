@@ -49,6 +49,7 @@ function PropertyList({hostView, setHostView, setUser, user, switchHostView, swi
         }
         return (
             <PropertyBlock
+                propid = {property.id}
                 key={property.id}
                 image = {getRandomImage()}
                 name={property.name}

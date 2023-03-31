@@ -9,16 +9,16 @@ import Login from "./Home-Access/LoginOut/Login.jsx";
 function App() {
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        // auto-login
-        fetch("/check_session").then((r) => {
-            if (r.ok) {
-                r.json().then((user) => setUser(user));
-            }
-        });
-    }, []);
+    // useEffect(() => {
+    //     // auto-login
+    //     fetch("/check_session").then((r) => {
+    //         if (r.ok) {
+    //             r.json().then((user) => setUser(user));
+    //         }
+    //     });
+    // }, []);
 
-    
+
     // if (!user) return <Landing setUser={setUser} />;
     //this pushes to login page if no user is logged in, which is fine but it bypasses our beautiful landing page
 
