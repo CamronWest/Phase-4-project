@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react"
-import Nav from "../Home/Nav.jsx"
+import React, { useState, useEffect } from "react";
+import Nav from "../Home/Nav.jsx";
 import PropertyList from "./PropertyList.jsx";
 import * as Yup from "yup";
 import axios from "axios";
@@ -20,20 +20,19 @@ function Dashboard({ userId }) {
         }
     };
 
-    useEffect(() => {
-      // Fetch the user's list of properties from the server and update the state
-      fetch(`/users/${userId}/properties`)
-        .then((response) => response.json())
-        .then((data) => setProperties(data));
-    }, [userId]);
-  
-    
-    return (
-    <div>
-        <PropertyList properties={properties} />
-        
-        </div>
-    )
-  }
 
-export default Dashboard
+    useEffect(() => {
+        // Fetch the user's list of properties from the server and update the state
+        fetch(`/users/${userId}/properties`)
+            .then((response) => response.json())
+            .then((data) => setProperties(data));
+    }, [userId]);
+
+    return (
+        <div>
+            <PropertyList properties={properties} />
+        </div>
+    );
+}
+
+export default Dashboard;
