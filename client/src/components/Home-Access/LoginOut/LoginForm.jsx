@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; // assuming you are using axios for making HTTP requests
 
-const LoginForm = ({ setUser, setNeedSignUp }) => {
+const LoginForm = ({ setUser, setNeedSignUp, user }) => {
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -19,6 +19,7 @@ const LoginForm = ({ setUser, setNeedSignUp }) => {
             console.log(response)
             // if the user is authenticated, set the user in state and redirect to the dashboard
             setUser(response.data);
+            console.log(user)
             window.location.href = "/home"; // redirect to the dashboard route
         } catch (error) {
             console.log(error);

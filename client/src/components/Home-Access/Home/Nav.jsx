@@ -20,9 +20,10 @@ function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOptio
             body: JSON.stringify({}),
         })
             .then((response) => response.json())
-            .then((data) => setUser(null));
-            console.log(user)
-    }
+            .then((data) => {
+                setUser(null);
+                console.log(user);
+            })}
 
 
     const handleGuestOptionClick = (e) => {
@@ -103,7 +104,7 @@ function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOptio
                 </ul>
             </div>
             <div className="nav-right">
-                <img src="#" alt="user avatar" />
+                <img className = "user-avatar"src="https://w7.pngwing.com/pngs/129/292/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png" alt="user avatar" />
                 <button onClick={switchGuestView} type="button" href="#">Guest View</button>
                 <button onClick={switchHostView}  type="button" href="#">Host View</button>
                 <button onClick={handleLogout}>Logout</button>

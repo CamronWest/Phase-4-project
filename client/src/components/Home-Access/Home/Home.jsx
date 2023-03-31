@@ -25,6 +25,8 @@ function Home({user, setUser}) {
             .then((data) => setAllProperties(data));
     }, []);
 
+    console.log(user)
+
 
     function carveState(location) {
         let i = parseInt(location.indexOf(","));

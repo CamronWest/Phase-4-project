@@ -66,7 +66,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect('/')
+    return jsonify({'message': 'User logged out successfully'})
 
 @login_manager.user_loader
 def load_user(user_id):
