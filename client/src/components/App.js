@@ -18,7 +18,8 @@ function App() {
         });
     }, []);
 
-    if (!user) return <Landing setUser={setUser} />;
+    
+    // if (!user) return <Landing setUser={setUser} />;
     //this pushes to login page if no user is logged in, which is fine but it bypasses our beautiful landing page
 
     return (
