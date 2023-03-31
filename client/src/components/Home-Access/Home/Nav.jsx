@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Nav.css";
 import PropertyList from "../../Properties/PropertyList";
+// import { redirect } from "react-router-dom";
+import Link from "react-router-dom";
 
 function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOption, setShowStateOption, selectedState, setSelectedState, guests, setGuests, hostView, switchHostView, setHostView, setUser, switchGuestView }) {
 
@@ -22,7 +24,6 @@ function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOptio
             .then((response) => response.json())
             .then((data) => {
                 setUser(null);
-                console.log(user);
             })}
 
 
@@ -107,7 +108,7 @@ function Nav({user, stateList, showGuestOption,setShowGuestOption,showStateOptio
                 <img className = "user-avatar"src="https://w7.pngwing.com/pngs/129/292/png-transparent-female-avatar-girl-face-woman-user-flat-classy-users-icon.png" alt="user avatar" />
                 <button onClick={switchGuestView} type="button" href="#">Guest View</button>
                 <button onClick={switchHostView}  type="button" href="#">Host View</button>
-                <button onClick={handleLogout}>Logout</button>
+                    <button type = "button" href = "/landing" onClick={handleLogout}>Logout</button> 
             </div>
         </nav>
     );

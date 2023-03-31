@@ -87,6 +87,8 @@ function Home({user, setUser}) {
             setShowStateOption={setShowStateOption}
             showGuestOption={showGuestOption}
             setShowGuestOption={setShowGuestOption}
+            setUser = {setUser}
+            user = {user}
             /> 
                 :
             <PropertyList

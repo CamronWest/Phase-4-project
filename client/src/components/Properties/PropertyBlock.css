@@ -1,26 +1,24 @@
 .property-blocks-container {
-    
-        display: grid;
-        width: 100vw;
-    
-        /* gap: 1rem; */
-        /* padding: 1rem; */
-    }
+    display: grid;
+    width: 100vw;
+
+    /* gap: 1rem; */
+    /* padding: 1rem; */
+}
 
 .property-block {
-    position:relative;
+    position: relative;
     align-self: inline-grid;
     background-color: rgba(245, 245, 245, 0.797);
     position: relative;
     width: 12rem;
     margin: 1rem;
-    border-radius: .7rem;
+    border-radius: 0.7rem;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
 
 .property-block:hover {
-    transform: scale(1.05);
     border: solid 1.5px rgba(250, 128, 114, 0.565);
     border: solid 3px rgba(250, 128, 114, 0.471);
 }
@@ -61,7 +59,7 @@
 }
 
 .card-info {
-    padding:.5rem
+    padding: 0.5rem;
 }
 
 .property-blocks-container {
@@ -69,12 +67,12 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     /* padding: 1rem; */
-  }
+}
 .property-block {
     position: relative;
     width: calc(33.33% - 1rem);
     margin: 0;
-    border-radius: .7rem;
+    border-radius: 0.7rem;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
@@ -82,32 +80,54 @@
     position: relative;
     width: calc(66.66% - 2rem);
     margin: 1rem;
-    border-radius: .7rem;.property-blocks-container {
+    border-radius: 0.7rem;
+    
+}
+
+    .property-blocks-container {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0rem;
         /* padding: 1rem; */
-}
-.property-block {
-    position: relative;
-    width: calc(33.33% - 1rem);
-    margin: 0;
-    border-radius: .7rem;
+    }
+    .property-block {
+        position: relative;
+        width: calc(33.33% - 1rem);
+        margin: 0;
+        border-radius: 0.7rem;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+    .property-block {
+        position: relative;
+        width: calc(66.66% - 2rem);
+        margin: 1rem;
+        border-radius: 0.7rem;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+    .property-block button {
+        color: #1f2833;
+        background-color: #66fcf1;
+        border: 2px solid #66fcf1;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .property-block button:hover {
+        background-color: #1f2833;
+        color: #66fcf1;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
-.property-block {
-    position: relative;
-    width: calc(66.66% - 2rem);
-    margin: 1rem;
-    border-radius: .7rem;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-}
+
+
 .property-block button {
-    color: #1F2833;
-    background-color: #66FCF1;
-    border: 2px solid #66FCF1;
+    color: #1f2833;
+    background-color: #66fcf1;
+    border: 2px solid #66fcf1;
     padding: 5px;
     border-radius: 5px;
     font-size: 14px;
@@ -115,23 +135,6 @@
     transition: background-color 0.3s, color 0.3s;
 }
 .property-block button:hover {
-    background-color: #1F2833;
-    color: #66FCF1;
-}
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-}
-.property-block button {
-    color: #1F2833;
-    background-color: #66FCF1;
-    border: 2px solid #66FCF1;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
-}
-.property-block button:hover {
-    background-color: #1F2833;
-    color: #66FCF1;
+    background-color: #1f2833;
+    color: #66fcf1;
 }
